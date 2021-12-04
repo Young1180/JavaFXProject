@@ -46,7 +46,7 @@ public class Main extends Application {
 	private void login(String username, String password, String table) {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaproject", "root", "mysqlroot");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaproject", "  root", "mysqlroot");
 			Statement stmt = con.createStatement();
 			
 			//username = youngkim, password = password
@@ -257,7 +257,7 @@ public class Main extends Application {
             public void handle(ActionEvent e) {
                 //actiontarget.setFill(Color.FIREBRICK);
                 
-        		//1. validation (no empty fields)
+        		//1. validation (no empty fields) young kim
         		Boolean firstNameExists = (fNameTextField.getText() != null && !fNameTextField.getText().isEmpty());
         		Boolean lastNameExists = (lNameTextField.getText() != null && !lNameTextField.getText().isEmpty());
         		Boolean addressExists = (AddressTextField.getText() != null && !AddressTextField.getText().isEmpty()); 
@@ -427,11 +427,14 @@ public class Main extends Application {
 	
 
 	
-	//admin should be able to add, update or delete a flight
 	// admin and user should be able to log out
 	
 	
+	//young - make initial screen bigger, make sign in database work, flights database should include  
+	// make app run, allow admin and user to add/drop flight , admin should be able to add, update or delete a flight, log out button
 	
+	
+	// after initial 
 	
 	
 	public static void main(String[] args) {
