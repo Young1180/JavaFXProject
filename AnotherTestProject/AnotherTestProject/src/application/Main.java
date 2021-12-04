@@ -427,6 +427,12 @@ public class Main extends Application {
 	
 
 	
+	//admin should be able to add, update or delete a flight
+	// admin and user should be able to log out
+	
+	
+	
+	
 	
 	public static void main(String[] args) {
 		launch(args);
