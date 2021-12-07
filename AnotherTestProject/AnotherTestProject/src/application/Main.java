@@ -56,7 +56,7 @@ public class Main extends Application {
 	private void login(String username, String password, String table) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaproject", "root", "mysqlroot");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaproject", "root", "Rayanahmedy2023");
 			Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			
 			ResultSet rs = stmt.executeQuery("select * from " + table + " where username='" + username + "' and password='" + password +"';");
@@ -113,6 +113,7 @@ public class Main extends Application {
         renderFirstPage(grid);
 
         Scene scene = new Scene(grid, 1000, 1000);
+        scene.getStylesheets().add(getClass().getResource( "application.css" ).toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
     }
