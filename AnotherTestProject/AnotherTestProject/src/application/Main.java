@@ -52,7 +52,7 @@ public class Main extends Application {
 			return -1;
 		}
 	}
-			
+			// log function where it pulls strings from database and matches username and password depending on the account type
 	private void login(String username, String password, String table) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -73,7 +73,7 @@ public class Main extends Application {
 			System.out.println(e);
 		}
 	}
-	
+	// allows user to register by inputting needed values, if successful create account. 
 	private void register(
 			String firstName, 
 			String lastName, 
@@ -91,11 +91,10 @@ public class Main extends Application {
 			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaproject", "root", "mysqlroot");
 			Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			String values = "(" + "'" + firstName + "','" + lastName +  "','" + address + "'," + zip + ",'" + state + "','" + username + "','" + password + "','" + email + "'," + ssn + ",'" + securityQuestion + "','" + securityAnswer + "'" + ")";
-//			System.out.println("INSERT INTO customer(firstName, lastName, address, zip, state, username, password, email, ssn, securityQuestion, securityAnswer) VALUES" + values + ";");
 			stmt.executeUpdate("INSERT INTO customer(firstName, lastName, address, zip, state, username, password, email, ssn, securityQuestion, securityAnswer) VALUES" + values + ";", Statement.RETURN_GENERATED_KEYS);
 			ResultSet rs = stmt.getGeneratedKeys();
 			int rows = getNumberOfRows(rs);
-			if (rs.next() & rows == 1) {
+			if (rs.next() & rows == 1) {  // Parse the zip code and social security since they are hard digits (string into integer)
 				user = new User(rs.getInt(1), firstName, lastName, address, Integer.parseInt(zip), state, username, password, email, Integer.parseInt(ssn), securityQuestion, securityAnswer);
 				System.out.println("Successfully made user");
 			}
@@ -104,7 +103,7 @@ public class Main extends Application {
 			System.out.println(e);
 		}
 	}
-	
+	//initial start screen boot 
 	@Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("JavaFX Welcome");
@@ -116,7 +115,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-	
+	//initial start screen but with options like registration, user login, and administer login 
 	public void renderFirstPage(GridPane grid) {
 		grid.getChildren().clear();
 		
@@ -128,19 +127,19 @@ public class Main extends Application {
         Text scenetitle = new Text("Welcome");
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(scenetitle, 0, 0, 2, 1);
-
+// buttons, hBox is button grouping not always needed. 
         Button registerBtn = new Button("Register");
         Button userLoginBbtn = new Button("Sign in as user");
         Button adminLoginBbtn = new Button("Sign in as admin");
         HBox registerHbBtn = new HBox(10);
         registerHbBtn.setAlignment(Pos.CENTER);
-        
+// getChildren is a method to get children components like boxes and button (like a list of components currently in the container        
         registerHbBtn.getChildren().add(registerBtn);
         registerHbBtn.getChildren().add(userLoginBbtn);
         registerHbBtn.getChildren().add(adminLoginBbtn);
         
         grid.add(registerHbBtn, 0, 1);
-        
+// each button has its own event that sends the user to a different page <ActionEvent>        
         registerBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -230,7 +229,7 @@ public class Main extends Application {
         //Security Q 
         Label SecurityQ = new Label("Security Question:"); 
         grid.add(SecurityQ, 0, 10); 
-        
+// this string is a ComboBox which is a combination of a text field and a drop down menu so user has to choose since they should'nt make their own questions, redundancy       
         ComboBox<String> SecurityQTextField = new ComboBox<String>();
         SecurityQTextField.getItems().add("First Car");
         SecurityQTextField.getItems().add("Highschool Name");
@@ -244,7 +243,6 @@ public class Main extends Application {
         TextField SecurityATextField = new TextField("accord"); 
         grid.add(SecurityATextField, 1, 11);
         
-        // back button not working
             
         Button btn = new Button("Register");
         Button backBtn = new Button("Back");
@@ -256,7 +254,7 @@ public class Main extends Application {
         
         final Text actiontarget = new Text();
         grid.add(actiontarget, 0, 13);
-        
+// this section is where boolean statements make sure there are no empty fields, duplicates,          
         btn.setOnAction(new EventHandler<ActionEvent>() {
         	@Override
             public void handle(ActionEvent e) {
@@ -276,7 +274,7 @@ public class Main extends Application {
         		
         		
         		Boolean allFieldsExist = firstNameExists && lastNameExists && addressExists && zipExists && stateExists && usernameExists && passwordExists && emailExists && ssnExists && securityqExists && securityaExists; 
-        		//2. make sure there are no duplicates
+// make sure there are no duplicates  with username and email with hasNoDuplicates application since they should always be unique PK wise
         		Boolean doesNotExist = hasNoDuplicates(UsernameTextField.getText(), EmailTextField.getText(), "customer");
         		
         		if (allFieldsExist && doesNotExist) {
@@ -290,35 +288,31 @@ public class Main extends Application {
         				actiontarget.setText("Something went wrong, validation cleared but user not created");
         			}
         			
-        		} else if (!allFieldsExist) {
+        		} else if (!allFieldsExist) {                // allFieldsExist will put out error message saying empty fields 
         			System.out.println("Fields are missing");
         			actiontarget.setFill(Color.FIREBRICK);
     				actiontarget.setText("Fields are missing");
-        		} else if (!doesNotExist){
+        		} else if (!doesNotExist){                   // doesNotExist will put out error message saying unique field already exists
         			System.out.println("This username/password already exists");
         			actiontarget.setFill(Color.FIREBRICK);
     				actiontarget.setText("User already exists");
-        		} else {
+        		} else {                                     // validation error where the database can't keep up with the problem or input something foreign
         			System.out.println("Something went wrong");
         			actiontarget.setText("Something went wrong, unclear validation errors");
         		}
 
-        		//2. make sure there are no duplicates
-        		//3. insert into table
-                // back button on others 
+
             }
         });
-        
+// this is the base logic for "logout button" with user = null        
 		backBtn.setOnAction(new EventHandler<ActionEvent>() {
 		        	
         	@Override
             public void handle(ActionEvent e) {
-//        		user = null;
         		renderFirstPage(grid);
         	}	
         });
         
-        //sign in button, check for dupes
         
 	}
 	
@@ -331,7 +325,7 @@ public class Main extends Application {
 			ResultSet rs = stmt.executeQuery("select * from " + table + " where username='" + username + "' or email='" + email +"';");
 			int rows = getNumberOfRows(rs);
 			con.close();
-			
+//if fields are not taken return true if taken return false			
 			if (rows == 0) {
 				return true;
 			} else {
@@ -342,7 +336,7 @@ public class Main extends Application {
 			return false;
 		}
 	}
-	
+	// login page 
 	public void renderLoginPage(GridPane grid, String table) {
 		grid.getChildren().clear();
         Text scenetitle = new Text("Login (" + table + ")");
@@ -376,12 +370,10 @@ public class Main extends Application {
         grid.add(actiontarget, 1, 6);
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
-
+// This ActionEvent is when you press the login button certain results will take place like successful login
             @Override
             public void handle(ActionEvent e) {
                 actiontarget.setFill(Color.FIREBRICK);
-//                System.out.println("Username is: " + userTextField.getText());
-//                System.out.println("Password is: " + pwBox.getText());
                 login(userTextField.getText(), pwBox.getText(), table);
                 System.out.println(user);
                 if (user != null) {
@@ -402,7 +394,7 @@ public class Main extends Application {
         		renderFirstPage(grid);
         	}	
         });
-        
+ // very important button!       
         forgotBtn.setOnAction(new EventHandler<ActionEvent>() {
         	
         	@Override
@@ -412,7 +404,7 @@ public class Main extends Application {
         });
    	
 	}
-	
+// when button is pressed, the first requirement is the username, when with the correct username it will give the security question and when you answer successfully you get password. 	
 	public void renderForgotPasswordPage(GridPane grid, String table) {
 		grid.getChildren().clear();
         Text scenetitle = new Text("Forgot Password? (" + table + ")");
@@ -424,10 +416,10 @@ public class Main extends Application {
 
         TextField userTextField = new TextField();
         grid.add(userTextField, 1, 1);
-
+// get password button is unable to do the ActionEvent since correct username has been inputted. 
         Button btn = new Button("Get Security Question");
         Button getPasswordBtn = new Button("Get Password");
-        getPasswordBtn.setDisable(true);
+        getPasswordBtn.setDisable(true);  // EXPLAIN HERE
         Button backBtn = new Button("Back");
         HBox hbBtn = new HBox(10);
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
@@ -474,7 +466,7 @@ public class Main extends Application {
                 password.setText("");
                 
                 if (sq != "This username does not exist") {
-                	getPasswordBtn.setDisable(false);
+                	getPasswordBtn.setDisable(false); //  get password button is disabled due to the requirement 
                 }
                 
             }
@@ -491,23 +483,29 @@ public class Main extends Application {
             }
         });
 	}
-	
+// get security question answer
 	public String checkAnswer(String username, String answer, String table) {
 		try {
+			//Biolerplate connection to database; (can be used without change so its static)
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaproject", "root", "mysqlroot");
 			Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			
+			//Get current admin/customer user
 			ResultSet rs = stmt.executeQuery("select * from " + table + " where username='" + username +"';");
 			int rows = getNumberOfRows(rs);
+			
+			//basecase string (returning a value without making any recursive calls (continuous)
 			String password = "Wrong answer";
 			
 			
 			if (rs.next() && rows == 1) {
+				//Database answer
 				String databaseAnswer = rs.getString(12);
 				
+				//if inputted answer equals database answer, update string to password
 				if (databaseAnswer.trim().toLowerCase().equals(answer.trim().toLowerCase())) {
-					password = rs.getString(8);
+					password = rs.getString(8); //<- user/admin password
 				}
 			}
 			con.close();
@@ -517,7 +515,7 @@ public class Main extends Application {
 			return null;
 		}
 	}
-	
+// when trying to retrieve password, you need to input username, and then the security question answer, if these conditions are not met, no security question / password
 	public String getSecurityQuestion(String username, String table) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -528,7 +526,6 @@ public class Main extends Application {
 			int rows = getNumberOfRows(rs);
 			String sq = "This username does not exist";
 			if (rs.next() && rows == 1) {
-//				System.out.println(rs.getInt(1) + "  " + rs.getString(2) + "  " + rs.getString(3) + " " + rs.getString(4));
 				sq = rs.getString(11);
 			}
 			con.close();
@@ -538,14 +535,14 @@ public class Main extends Application {
 			return null;
 		}
 	}
-	
+// logged in view for admin/user	
 	public void renderLoggedInView(GridPane grid, String table) {
 		grid.getChildren().clear();
 		grid.setAlignment(Pos.TOP_CENTER);
         Text scenetitle = new Text("Flights");
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(scenetitle, 0, 0, 2, 1);
-        
+// this is charts where it shows all flights and booked flights       
         ObservableList<Flight> flights = getFlights();
         ObservableList<Flight> bookedFlights = getBookedFlights(flights, table);
 		ObservableList<String> startCities = getAllStartCities(flights);
@@ -559,7 +556,7 @@ public class Main extends Application {
         Label departureLabel = new Label("Departure Times:");
         Label arrivalLabel = new Label("Arrival Time:");
         Label dateLabel = new Label("Dates:");
-        
+//drop down menu for the filters       
 		ComboBox<String> startCityDropdown = new ComboBox<String>();
         startCityDropdown.setItems(startCities);
         
@@ -635,7 +632,7 @@ public class Main extends Application {
         Button bookBtn = new Button("Book");
         grid.add(bookBtn, 0, 13);
         
-        //My Flights
+        //My Flights chart after adding a flight from the flight database
         
         final Label bookedFlightsLabel = new Label("My Flights");
         
@@ -676,7 +673,7 @@ public class Main extends Application {
         
         final Text actiontarget = new Text();
         grid.add(actiontarget, 0, 14);
-        
+   //booking button where it takes flights and puts it in the booking table
         bookBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -694,17 +691,15 @@ public class Main extends Application {
                     //3. time conflict
                     Boolean timeConflict = checkTimeConflict(selectedFlight, bookedFlights);
                     
-                    // create a new row in bookings table with idCustomer/idAdmin and idFlight
-                    // add flight to my booked flights list
                     if (notBooked && availableSeats) {
                     	Boolean addedFlight = bookFlight(selectedFlight, table);
-                    	
+                    	// when there is a time conflict input error message
                     	if (timeConflict) {
                     		actiontarget.setFill(Color.GOLDENROD);
             				actiontarget.setText("WARNING: This flight overlaps with another");
                     		System.out.println("WARNING: This flight overlaps with another");
                     	}
-                    	
+                    	// if there is no time conflict book flight
                         if (addedFlight) {
                         	actiontarget.setFill(Color.DARKSEAGREEN);
             				actiontarget.setText("Success!");
@@ -730,7 +725,7 @@ public class Main extends Application {
                 }
             }
         });
-        
+// deleting the flights through the table which also deletes the database entry     
         deleteBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -756,7 +751,7 @@ public class Main extends Application {
         		renderFirstPage(grid);
         	}	
         }); 
-        
+// admin privileges where you can edit, delete, and create a flight from the front end to the database        
         if (table == "administrator") {
         	HBox hbBtn = new HBox(5);
             hbBtn.setAlignment(Pos.BASELINE_RIGHT);
@@ -772,7 +767,7 @@ public class Main extends Application {
             hbBtn.getChildren().add(deleteFlightBtn);
             
             grid.add(hbBtn, 2, 13);
-            
+// all referencing from the flights database table            
             createFlightBtn.setOnAction(new EventHandler<ActionEvent>() {
             	@Override
                 public void handle(ActionEvent e) {
@@ -813,7 +808,7 @@ public class Main extends Application {
             	}
             });
         }
-        
+//IMPORTANT! filters from start/end cities, start/end times, dates       
         resetFilters.setOnAction(new EventHandler<ActionEvent>() {
         	@Override
             public void handle(ActionEvent e) {
@@ -861,7 +856,7 @@ public class Main extends Application {
         	}	
         });
 	}
-	
+// when filtering by start cities only bring up the same start city	
 	public ObservableList<String> getAllStartCities(ObservableList<Flight> flights) {
 		ObservableList<String> startCities = FXCollections.observableArrayList();
 		
@@ -875,7 +870,7 @@ public class Main extends Application {
 		
 		return startCities;
 	}
-	
+// when filtering by start cities only bring up the same end city		
 	public ObservableList<String> getAllLastCities(ObservableList<Flight> flights) {
 		ObservableList<String> lastCities = FXCollections.observableArrayList();
 		
@@ -889,7 +884,7 @@ public class Main extends Application {
 		
 		return lastCities;
 	}
-	
+// same logic as above	
 	public ObservableList<String> getAllDepartureTimes(ObservableList<Flight> flights) {
 		ObservableList<String> DepartureTimes = FXCollections.observableArrayList();
 		
@@ -931,7 +926,7 @@ public class Main extends Application {
 		
 		return AllDates;
 	}
-	
+// this is referencing the flights database on the all flights chart when searching for flights
 	public ObservableList<Flight> getFlights() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -954,7 +949,7 @@ public class Main extends Application {
 			return null;
 		}
 	}
-	
+// this is referencing the my flights table that pulls from the database and the all flights table (FK)	
 	public ObservableList<Flight> getBookedFlights(ObservableList<Flight> flights, String table) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -988,7 +983,7 @@ public class Main extends Application {
 			return null;
 		}
 	}
-	
+// this is the action of being able to book the actual flight	
 	public Boolean bookFlight(Flight selectedFlight, String table) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -1017,7 +1012,7 @@ public class Main extends Application {
 			return false;
 		}
 	}
-	
+	// this is the action of being able to remove NOT DELETE the actual flight		
 	public Boolean removeFlight(Flight selectedFlight, String table) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -1044,7 +1039,7 @@ public class Main extends Application {
 			return false;
 		}
 	}
-	
+// when you try to book a flight but you didnt select anything	
 	public Boolean checkNotBooked(Flight selectedFlight, ObservableList<Flight> bookedFlights) {
 		ObservableList<Integer> bookedFlightIDs = FXCollections.observableArrayList();
 		for (Flight bookedFlight: bookedFlights) {
@@ -1053,7 +1048,7 @@ public class Main extends Application {
 		
 		return !bookedFlightIDs.contains(selectedFlight.id);
 	}
-	
+// referencing seat number with flight id you can check the total space and the amount of space taken	
 	public Boolean checkAvailableSeats(Flight selectedFlight) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -1061,12 +1056,13 @@ public class Main extends Application {
 			Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			Boolean seatsAvailable = false;
 			
-			//username = youngkim, password = password
+// trying into the booking table to see who booked what and how many booked it			
 			ResultSet rs = stmt.executeQuery("select idBooking from booking where idFlight = " + selectedFlight.id + ";");
 			int rows = getNumberOfRows(rs);
 			int totalSeats = Integer.parseInt(selectedFlight.totalSeats);
-			
-			if (rows <= totalSeats) {
+			System.out.println("Current Seats: " + rows);
+			System.out.println("Total Seats: " + totalSeats);
+			if (rows < totalSeats) {
 				System.out.println("Seats available");
 				seatsAvailable =  true;
 			}
@@ -1077,7 +1073,7 @@ public class Main extends Application {
 			return false;
 		}
 	}
-	
+// time conflict, the time and date are originally strings on the database but after converting them via parse statements they are integers that will send messages when overlapped	
 	public Boolean checkTimeConflict(Flight selectedFlight, ObservableList<Flight> bookedFlights) {
 		try {
 			ObservableList<FlightTimes> bookedFlightTimes = FXCollections.observableArrayList();
@@ -1088,10 +1084,8 @@ public class Main extends Application {
 				Long startTime = new SimpleDateFormat("yyyyMMdd HHmm").parse(bookedFlight.date.get() + " " + bookedFlight.departuretime.get()).getTime();
 			    Long endTime = new SimpleDateFormat("yyyyMMdd HHmm").parse(bookedFlight.date.get() + " " + bookedFlight.arrivalTime.get()).getTime();
 				FlightTimes flightTimes = new FlightTimes(startTime, endTime);
-				bookedFlightTimes.add(flightTimes);
+				bookedFlightTimes.add(flightTimes);	
 			}
-			
-			System.out.println("Trying to parse this " + selectedFlight.date.get() + " " + selectedFlight.departuretime.get());
 			
 			Long selectedFlightStartTime = new SimpleDateFormat("yyyyMMdd HHmm").parse(selectedFlight.date.get() + " " + selectedFlight.departuretime.get()).getTime();
 			Long selectedFlightStartEndTime = new SimpleDateFormat("yyyyMMdd HHmm").parse(selectedFlight.date.get() + " " + selectedFlight.departuretime.get()).getTime();
@@ -1102,7 +1096,9 @@ public class Main extends Application {
 			bookedFlightTimes.sort(comparator);
 			
 			for (int i = 0; i < bookedFlightTimes.size() - 1; ++i) {
+				System.out.println("Flight " + i + " Start: " + bookedFlightTimes.get(i).startTime + " End: " + bookedFlightTimes.get(i).endTime);
 	            if (conflictsWith(bookedFlightTimes.get(i), bookedFlightTimes.get(i + 1))) {
+	            	System.out.println("Conflict");
 	                return true;
 	            }
 	        }
@@ -1135,16 +1131,16 @@ public class Main extends Application {
 	
 	public boolean conflictsWith(FlightTimes flight1, FlightTimes flight2) {
 	    if (flight1.endTime >= flight2.startTime) {
-	        return false;
+	        return true;
 	    }
 
 	    if (flight2.endTime >= flight1.startTime) {
-	        return false;
+	        return true;
 	    }
 
-	    return true;
+	    return false;
 	}
-	
+// this is admin being able to delete flights through front end and also being deleted through the back end	
 	public boolean adminDeleteFlight(Flight selectedFlight) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -1164,7 +1160,7 @@ public class Main extends Application {
 			return false;
 		}
 	}
-	
+// admin page separate from users, additional 3 buttons edit, create, and delete	
 	public void renderCreateorEditView(GridPane grid, String mode, Flight selectedFlight) {
 		grid.getChildren().clear();
 		grid.setAlignment(Pos.CENTER);
@@ -1250,7 +1246,7 @@ public class Main extends Application {
         if (mode.equals("edit")) {
         	Button editBtn = new Button("Edit");
         	hbBtn.getChildren().add(editBtn);
-            
+ // by setting boolean statements when we edit we can make sure there is nothing wrong (missing fields)           
         	editBtn.setOnAction(new EventHandler<ActionEvent>() {
             	@Override
                 public void handle(ActionEvent e) {
@@ -1295,7 +1291,7 @@ public class Main extends Application {
 		} else {
 			Button createBtn = new Button("Create");
             hbBtn.getChildren().add(createBtn);
-            
+ // when creating flights, error messages will show when something went wrong           
             createBtn.setOnAction(new EventHandler<ActionEvent>() {
             	@Override
                 public void handle(ActionEvent e) {
@@ -1347,7 +1343,7 @@ public class Main extends Application {
         	}
         });
 	}
-	
+	//editing flights by referencing the database so when you input the necessary fields, flight is edited
 	public Boolean editFlight(int id, String startCity, String endCity, String departureTime, String arrivalTime, String totalSeats, String date) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -1377,7 +1373,7 @@ public class Main extends Application {
 			return false;
 		}
 	}
-	
+	//editing flights by referencing the database so when you input the necessary fields, flight is created	
 	public Boolean createFlight(String startCity, String endCity, String departureTime, String arrivalTime, String totalSeats, String date) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
