@@ -52,6 +52,8 @@ public class Main extends Application {
 			return -1;
 		}
 	}
+	
+	// Connecting to mySQL DB 
 			
 	private void login(String username, String password, String table) {
 		try {
@@ -113,7 +115,6 @@ public class Main extends Application {
         renderFirstPage(grid);
 
         Scene scene = new Scene(grid, 1000, 1000);
-        scene.getStylesheets().add(getClass().getResource( "application.css" ).toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
     }
