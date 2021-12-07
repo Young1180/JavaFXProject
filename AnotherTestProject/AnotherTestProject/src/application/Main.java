@@ -58,7 +58,7 @@ public class Main extends Application {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaproject", "root", "mysqlroot");
 			Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			
+			// matching username to username and password to password to log in
 			ResultSet rs = stmt.executeQuery("select * from " + table + " where username='" + username + "' and password='" + password +"';");
 			System.out.println("select * from " + table + " where username='" + username + "' and password='" + password +"';");
 			int rows = getNumberOfRows(rs);
@@ -1275,12 +1275,12 @@ public class Main extends Application {
 	                    		totalSeatsTextField.getText(), 
 	                    		dateTextField.getText()
             			);
-            			
+            			// once succeeded bring them back to book a flight page
             			if (success) {
                         	renderLoggedInView(grid, "administrator");
                         } else {
                         	System.out.println("Something went wrong");
-                        	//Add new text thingy like action field
+                        	//Add new text thing like action field
                         }
             		} else {
             			actiontarget.setFill(Color.FIREBRICK);
@@ -1379,7 +1379,7 @@ public class Main extends Application {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaproject", "root", "mysqlroot");
 			Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			
+			// method matches parameters against each other, making sure nothing is blank and it can create/edit flight 
 			Boolean success = false;
 			String values = "(" + "'" + startCity + "','" + endCity +  "','" + departureTime + "','" + arrivalTime + "','" + totalSeats + "','" + date + "')";
 			System.out.println("INSERT INTO flights(startCity, lastCity, departureTime, arrivalTime, totalSeats, date) VALUES" + values + ";");
