@@ -52,7 +52,7 @@ public class Main extends Application {
 			return -1;
 		}
 	}
-			// log function where it pulls strings from database and matches username and password depending on the account type
+			// login function where it pulls strings from database and matches username and password depending on the account type
 	private void login(String username, String password, String table) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -272,7 +272,7 @@ public class Main extends Application {
         		Boolean securityqExists = (SecurityQTextField.getValue() != null); 
         		Boolean securityaExists = (SecurityATextField.getText() != null && !SecurityATextField.getText().isEmpty()); 
         		
-        		
+        		// allFields exists can be seen as a encapsulation since youre hiding the necessary fields as allFieldsExist when compared to the boolean
         		Boolean allFieldsExist = firstNameExists && lastNameExists && addressExists && zipExists && stateExists && usernameExists && passwordExists && emailExists && ssnExists && securityqExists && securityaExists; 
 // make sure there are no duplicates  with username and email with hasNoDuplicates application since they should always be unique PK wise
         		Boolean doesNotExist = hasNoDuplicates(UsernameTextField.getText(), EmailTextField.getText(), "customer");
@@ -416,7 +416,7 @@ public class Main extends Application {
 
         TextField userTextField = new TextField();
         grid.add(userTextField, 1, 1);
-// get password button is unable to do the ActionEvent since correct username has been inputted. 
+// get password button is unable to do the ActionEvent since incorrect username has been inputted. 
         Button btn = new Button("Get Security Question");
         Button getPasswordBtn = new Button("Get Password");
         getPasswordBtn.setDisable(true);  // EXPLAIN HERE
@@ -535,7 +535,7 @@ public class Main extends Application {
 			return null;
 		}
 	}
-// logged in view for admin/user	
+// logged in view for admin/user	Polymorphism? superclass is account holder, subclasses user and admin.
 	public void renderLoggedInView(GridPane grid, String table) {
 		grid.getChildren().clear();
 		grid.setAlignment(Pos.TOP_CENTER);
@@ -574,7 +574,7 @@ public class Main extends Application {
         
         Button resetFilters = new Button("Reset Filter");
         Button filterFlights = new Button("Filter");
-        
+// inheritance        
         HBox filterLabels = new HBox(10);
         filterLabels.setAlignment(Pos.TOP_LEFT);
         filterLabels.getChildren().add(startCityLabel);
@@ -673,7 +673,7 @@ public class Main extends Application {
         
         final Text actiontarget = new Text();
         grid.add(actiontarget, 0, 14);
-   //booking button where it takes flights and puts it in the booking table
+   //booking button where it takes flights and puts it in the booking table making it your flight
         bookBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
