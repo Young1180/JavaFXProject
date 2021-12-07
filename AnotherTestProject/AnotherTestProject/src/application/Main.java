@@ -73,7 +73,7 @@ public class Main extends Application {
 			System.out.println(e);
 		}
 	}
-	// allows user to register by inputting needed values, if successful create account. 
+	// allows user to register by inputting needed values, if successful create account
 	private void register(
 			String firstName, 
 			String lastName, 
@@ -1374,7 +1374,7 @@ public class Main extends Application {
 		}
 	}
 	//editing flights by referencing the database so when you input the necessary fields, flight is created	
-	public Boolean createFlight(String startCity, String endCity, String departureTime, String arrivalTime, String totalSeats, String date) {
+	public Boolean createFlight(String startCity, String endCity, String departureTime, String arrivalTime, String totalSeats, String date) { 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaproject", "root", "mysqlroot");
@@ -1387,7 +1387,6 @@ public class Main extends Application {
 			ResultSet rs = stmt.getGeneratedKeys();
 			int rows = getNumberOfRows(rs);
 			if (rs.next() & rows == 1) {
-//				System.out.println(rs.getInt(1) + "  " + rs.getString(2) + "  " + rs.getString(3) + " " + rs.getString(4));
 				System.out.println("Successfully made flight");
 				success = true;
 			}
