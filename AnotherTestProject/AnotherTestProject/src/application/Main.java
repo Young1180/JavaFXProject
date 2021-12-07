@@ -175,31 +175,31 @@ public class Main extends Application {
         //First Name box
         Label fName = new Label("First Name:");
         grid.add(fName, 0, 1);
-        TextField fNameTextField = new TextField("Young");
+        TextField fNameTextField = new TextField("");
         grid.add(fNameTextField, 1, 1);
         
         //Last Name box
         Label lName = new Label("Last name:");
         grid.add(lName, 0, 2);
-        TextField lNameTextField = new TextField("Kim");
+        TextField lNameTextField = new TextField("");
         grid.add(lNameTextField, 1, 2);
         
         //Address 
         Label Address = new Label("Address:"); 
         grid.add(Address, 0, 3);
-        TextField AddressTextField = new TextField("123 Address St."); 
+        TextField AddressTextField = new TextField(""); 
         grid.add(AddressTextField, 1, 3);
         
         //Zip Code 
         Label Zip = new Label("Zip Code"); 
         grid.add(Zip, 0, 4);
-        TextField ZipTextField = new TextField("12345"); 
+        TextField ZipTextField = new TextField(""); 
         grid.add(ZipTextField, 1, 4);
         
         //State 
         Label State = new Label("State:"); 
         grid.add(State, 0, 5); 
-        TextField StateTextField = new TextField("GA"); 
+        TextField StateTextField = new TextField(""); 
         grid.add(StateTextField, 1, 5);
 
         //Username 
@@ -211,7 +211,7 @@ public class Main extends Application {
         //Password
         Label Password = new Label("Password:"); 
         grid.add(Password, 0, 7); 
-        TextField PasswordTextField = new TextField("password"); 
+        TextField PasswordTextField = new TextField(""); 
         grid.add(PasswordTextField, 1, 7);
         
         //Email
@@ -223,7 +223,7 @@ public class Main extends Application {
         //SSN 
         Label SSN = new Label("SSN:"); 
         grid.add(SSN, 0, 9); 
-        TextField SSNTextField = new TextField("1234567890"); 
+        TextField SSNTextField = new TextField(""); 
         grid.add(SSNTextField, 1, 9);
         
         //Security Q 
@@ -240,7 +240,7 @@ public class Main extends Application {
         // Security A 
         Label SecurityA = new Label("Security Answer:"); 
         grid.add(SecurityA, 0, 11); 
-        TextField SecurityATextField = new TextField("accord"); 
+        TextField SecurityATextField = new TextField(""); 
         grid.add(SecurityATextField, 1, 11);
         
             
